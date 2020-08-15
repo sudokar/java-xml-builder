@@ -90,6 +90,7 @@ bintray {
     pkg {
         repo = "java-libs"
         name = "$project.name"
+        userOrg = "sudokar"
         publicDownloadNumbers = true
         desc = "Type safe Java DSL builder for XML"
         licenses = ["MIT"]
