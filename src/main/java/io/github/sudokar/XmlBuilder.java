@@ -37,17 +37,17 @@ public final class XmlBuilder {
     this.stack = new ArrayDeque<>();
   }
 
-  public PreBuildStage root(String rootTagName, String encoding) {
-    requireNonNull(rootTagName, "XML root tag name must not be null");
+  public PreBuildStage root(String tagName, String encoding) {
+    requireNonNull(tagName, "XML root tag name must not be null");
     requireNonNull(encoding, "XML encoding tag name must not be null");
-    Element element = this.document.createElement(rootTagName);
+    Element element = this.document.createElement(tagName);
     this.stack.push(element);
     this.encoding = encoding;
     return new PreBuildStage();
   }
 
-  public PreBuildStage root(String rootTagName) {
-    return this.root(rootTagName, DEFAULT_ENCODING);
+  public PreBuildStage root(String tagName) {
+    return this.root(tagName, DEFAULT_ENCODING);
   }
 
   private Document getDocument() {
@@ -78,27 +78,27 @@ public final class XmlBuilder {
       return new ElementGroupStage(this);
     }
 
-    public PreBuildStage withAttribute(String attributeName, String attributeValue) {
-      requireNonNull(attributeName, "XML tag attribute name must not be null");
-      requireNonNull(attributeValue, "XML tag attribute value must not be null");
+    public <T> PreBuildStage withAttribute(String name, T value) {
+      requireNonNull(name, "XML tag attribute name must not be null");
+      requireNonNull(value, "XML tag attribute value must not be null");
       Element elementToUpdate = (currentElement == null) ? stack.peek() : currentElement;
-      elementToUpdate.setAttribute(attributeName, attributeValue);
+      elementToUpdate.setAttribute(name, value.toString());
       return this;
     }
 
-    public PreBuildStage withNamespace(String namespacePrefix, String namespaceURI) {
-      requireNonNull(namespaceURI, "Namespace URI must not be null");
+    public PreBuildStage withNamespace(String prefix, String uri) {
+      requireNonNull(uri, "Namespace URI must not be null");
       Element elementToUpdate = (currentElement == null) ? stack.peek() : currentElement;
-      if (namespacePrefix == null) {
-        elementToUpdate.setAttribute("xmlns:", namespaceURI);
+      if (prefix == null) {
+        elementToUpdate.setAttribute("xmlns:", uri);
       } else {
-        elementToUpdate.setAttribute("xmlns:" + namespacePrefix, namespaceURI);
+        elementToUpdate.setAttribute("xmlns:" + prefix, uri);
       }
       return this;
     }
 
-    public PreBuildStage withNamespace(String namespaceURI) {
-      return this.withNamespace(null, namespaceURI);
+    public PreBuildStage withNamespace(String uri) {
+      return this.withNamespace(null, uri);
     }
 
     public PostBuildStage build() {
@@ -135,8 +135,8 @@ public final class XmlBuilder {
       return this;
     }
 
-    public ElementGroupStage withAttribute(String name, String value) {
-      preBuildStage.withAttribute(name, value);
+    public <T> ElementGroupStage withAttribute(String name, T value) {
+      preBuildStage.withAttribute(name, value.toString());
       return this;
     }
 
