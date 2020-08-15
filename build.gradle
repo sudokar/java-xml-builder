@@ -1,0 +1,108 @@
+plugins {
+    id "java-library"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.5"
+    id "com.jfrog.artifactory" version "4.16.1"
+    id "project-report"
+    id "idea"
+}
+
+group "io.github.sudokar"
+version "0.1"
+
+repositories {
+    jcenter()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+    testImplementation("org.assertj:assertj-core:3.11.1")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            pom {
+                name = "$project.name"
+                description = "Type safe Java DSL builder for XML"
+                url = "https://github.com/sudokar/xml-builder"
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://github.com/sudokar/xml-builder/blob/master/LICENSE"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "sudokar"
+                        name = "sudokar"
+                    }
+                }
+                scm {
+                    url = "https://github.com/sudokar/xml-builder"
+                }
+            }
+        }
+    }
+}
+
+artifactory {
+    contextUrl = "http://oss.jfrog.org"
+    publish {
+        repository {
+            repoKey = "oss-snapshot-local"
+            username = System.getProperty("BINTRAY_USER")
+            password = System.getProperty("BINTRAY_KEY")
+        }
+        defaults {
+            publications("mavenPublication")
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+    resolve {
+        repoKey = "jcenter"
+    }
+    clientConfig.info.setBuildNumber(System.getProperty("build.number"))
+}
+
+bintray {
+    user = System.getProperty("bintray.user")
+    key = System.getProperty("bintray.key")
+    publications = ["mavenPublication"]
+    override = true
+    dryRun = false
+    publish = true
+    pkg {
+        repo = "java-libs"
+        name = "$project.name"
+        publicDownloadNumbers = true
+        desc = "Type safe Java DSL builder for XML"
+        licenses = ["MIT"]
+        vcsUrl = "https://github.com/sudokar/xml-builder"
+        version {
+            name = "$project.version"
+            desc = "$project.version"
+            released = new Date()
+            mavenCentralSync {
+                sync = true
+                user = System.getProperty("sonatype.userToken")
+                password = System.getProperty("sonatype.paasword")
+            }
+        }
+    }
+}

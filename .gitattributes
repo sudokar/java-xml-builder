@@ -1,0 +1,15 @@
+# Java sources
+*.java          text diff=java
+*.gradle        text diff=java
+
+# These files are text and should be normalized (Convert crlf => lf)
+*.sh            text
+.gitignore      text
+*.md            text
+
+# These are windows files and should use crlf
+*.bat           text eol=crlf
+
+# These files are binary and should be left untouched
+*.class         binary
+*.jar           binary
