@@ -123,8 +123,8 @@ bintray {
             released = new Date()
             mavenCentralSync {
                 sync = true
-                user = System.getProperty("sonatype.user")
-                password = System.getProperty("sonatype.paasword")
+//                user = System.getProperty("sonatype.user")
+//                password = System.getProperty("sonatype.paasword")
             }
         }
     }

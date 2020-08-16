@@ -27,4 +27,4 @@ jobs:
         BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
         SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-      run: ./gradlew bintrayUpload bintrayPublish -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY -Dsonatype.user=SONATYPE_USER -Dsonatype.paasword=SONATYPE_PASSWORD
+      run: ./gradlew bintrayUpload bintrayPublish -Dbintray.user=$BINTRAY_USER -Dbintray.key=$BINTRAY_KEY

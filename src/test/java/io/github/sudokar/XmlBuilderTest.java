@@ -42,7 +42,6 @@ class XmlBuilderTest {
             .root("orders", "UTF-16")
             .build()
             .getXml();
-    ;
 
     // Assert
     assertThat(xml)
