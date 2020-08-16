@@ -31,10 +31,32 @@ test {
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 publishing {
     publications {
         mavenPublication(MavenPublication) {
             from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
             pom {
                 name = "$project.name"
                 description = "Type safe Java DSL builder for XML"
@@ -97,7 +119,7 @@ bintray {
         vcsUrl = "https://github.com/sudokar/xml-builder"
         version {
             name = "$project.version"
-            desc = "$project.version"
+            desc = "Type safe Java DSL builder for XML"
             released = new Date()
             mavenCentralSync {
                 sync = true
